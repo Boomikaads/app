@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './DatabaseSearch.css';
 
-
-
 const DatabaseSearch = () => {
   const [checkboxes, setCheckboxes] = useState({
     Legislature: false,
@@ -13,7 +11,9 @@ const DatabaseSearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [articles, setArticles] = useState([]);
   const [error, setError] = useState(null);
-  const [hasSearched, setHasSearched] = useState(false); // New state to track if a search has been performed
+  const [hasSearched, setHasSearched] = useState(false);
+
+  const backendUrl = 'https://backend-one-olive.vercel.app'; // Deployed backend URL
 
   const handleCheckboxChange = async (event) => {
     const { name, checked } = event.target;
@@ -23,7 +23,7 @@ const DatabaseSearch = () => {
     }));
 
     try {
-      const response = await fetch('http://localhost:5000/database', {
+      const response = await fetch(`${backendUrl}/database`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ database: name, action: checked ? 'connect' : 'disconnect' }),
@@ -46,7 +46,7 @@ const DatabaseSearch = () => {
     try {
       setError(null);
       setHasSearched(true); // Set to true when a search is performed
-      const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(searchTerm)}`);
+      const response = await fetch(`${backendUrl}/search?query=${encodeURIComponent(searchTerm)}`);
       if (!response.ok) {
         throw new Error('Failed to fetch search results');
       }
